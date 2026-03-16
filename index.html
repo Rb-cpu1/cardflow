@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VirtualCard • Gerador</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  
+  <style>
+    .card {
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+      transition: all 0.4s ease;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 35px 60px -15px rgb(0 0 0 / 0.5);
+    }
+    .mastercard {
+      background: linear-gradient(135deg, #1a1a1a, #4b4b4b);
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen">
+  <div class="max-w-2xl mx-auto p-6">
+    <h1 class="text-4xl font-bold text-center mb-2 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+      VirtualCard
+    </h1>
+    <p class="text-center text-gray-400 mb-8">Gerador de Cartões Virtuais • Demo</p>
+
+    <!-- Disclaimer -->
+    <div class="bg-yellow-900/30 border border-yellow-500/30 text-yellow-400 text-sm p-4 rounded-2xl mb-8">
+      ⚠️ Este aplicativo gera dados fictícios apenas para teste. Não use para fraudes.
+    </div>
+
+    <!-- Cartão Preview -->
+    <div id="card" class="card w-full h-56 rounded-3xl p-8 relative overflow-hidden cursor-pointer" onclick="flipCard()">
+      <div class="flex justify-between items-start">
+        <div>
+          <i class="fa-solid fa-chip text-4xl text-yellow-300"></i>
+        </div>
+        <div id="cardType" class="text-2xl font-bold">VISA</div>
+      </div>
+
+      <div class="mt-10">
+        <p class="text-2xl tracking-widest font-mono" id="cardNumber">4242 4242 4242 4242</p>
+      </div>
+
+      <div class="flex justify-between mt-12">
+        <div>
+          <p class="text-xs text-gray-300">TITULAR</p>
+          <p class="font-medium" id="cardName">SEU NOME</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-300">VALIDADE</p>
+          <p class="font-medium" id="cardExpiry">12/28</p>
+        </div>
+      </div>
+
+      <div class="absolute bottom-6 right-8 text-4xl opacity-30" id="cardLogo">💳</div>
+    </div>
+
+    <!-- Formulário -->
+    <div class="mt-10 space-y-6">
+      <div>
+        <label class="block text-sm text-gray-400 mb-2">Nome no Cartão</label>
+        <input type="text" id="nameInput" placeholder="Seu Nome" 
+               class="w-full bg-gray-900 border border-gray-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-blue-500">
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <button onclick="generateCard('visa')" 
+                class="bg-blue-600 hover:bg-blue-700 py-4 rounded-2xl font-semibold flex items-center justify-center gap-2">
+          <i class="fa-brands fa-cc-visa"></i> Gerar Visa
+        </button>
+        
+        <button onclick="generateCard('mastercard')" 
+                class="bg-gray-800 hover:bg-gray-700 py-4 rounded-2xl font-semibold flex items-center justify-center gap-2">
+          <i class="fa-brands fa-cc-mastercard"></i> Gerar Mastercard
+        </button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div onclick="copyToClipboard('number')" class="bg-gray-900 hover:bg-gray-800 p-4 rounded-2xl cursor-pointer">
+          <p class="text-xs text-gray-400">Número</p>
+          <p id="copyNumber" class="font-mono text-sm">4242 4242 4242 4242</p>
+        </div>
+        <div onclick="copyToClipboard('expiry')" class="bg-gray-900 hover:bg-gray-800 p-4 rounded-2xl cursor-pointer">
+          <p class="text-xs text-gray-400">Validade</p>
+          <p id="copyExpiry" class="font-mono">12/28</p>
+        </div>
+        <div onclick="copyToClipboard('cvv')" class="bg-gray-900 hover:bg-gray-800 p-4 rounded-2xl cursor-pointer">
+          <p class="text-xs text-gray-400">CVV</p>
+          <p id="copyCvv" class="font-mono">424</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let isFlipped = false;
+
+    function luhnAlgorithm(number) {
+      let sum = 0;
+      let isEven = false;
+      for (let i = number.length - 1; i >= 0; i--) {
+        let digit = parseInt(number[i]);
+        if (isEven) digit *= 2;
+        if (digit > 9) digit -= 9;
+        sum += digit;
+        isEven = !isEven;
+      }
+      return sum % 10 === 0;
+    }
+
+    function generateCardNumber(prefix) {
+      let num = prefix;
+      while (num.length < 15) {
+        num += Math.floor(Math.random() * 10).toString();
+      }
+      
+      for (let i = 0; i < 10; i++) {
+        let testNum = num + i;
+        if (luhnAlgorithm(testNum)) return testNum;
+      }
+      return num + "0";
+    }
+
+    function formatCardNumber(number) {
+      return number.replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    function generateCard(type) {
+      const name = document.getElementById('nameInput').value.toUpperCase() || "SEU NOME";
+      
+      let prefix, cardType, logo;
+      if (type === 'visa') {
+        prefix = '4' + Math.floor(Math.random()*9+1);
+        cardType = 'VISA';
+        logo = '💳';
+      } else {
+        const mcPrefixes = ['51','52','53','54','55','2221','2222'];
+        prefix = mcPrefixes[Math.floor(Math.random()*mcPrefixes.length)];
+        cardType = 'MASTERCARD';
+        logo = '🔴';
+      }
+
+      const cardNumber = generateCardNumber(prefix);
+      const month = String(Math.floor(Math.random()*12)+1).padStart(2, '0');
+      const year = String(new Date().getFullYear() + Math.floor(Math.random()*5) + 1).slice(2);
+      const cvv = String(Math.floor(100 + Math.random() * 900));
+
+      // Atualiza o cartão
+      document.getElementById('cardNumber').textContent = formatCardNumber(cardNumber);
+      document.getElementById('cardName').textContent = name;
+      document.getElementById('cardExpiry').textContent = `${month}/${year}`;
+      document.getElementById('cardType').textContent = cardType;
+      document.getElementById('cardLogo').textContent = logo;
+
+      if (type === 'mastercard') {
+        document.getElementById('card').classList.add('mastercard');
+      } else {
+        document.getElementById('card').classList.remove('mastercard');
+      }
+
+      // Atualiza campos de cópia
+      document.getElementById('copyNumber').textContent = formatCardNumber(cardNumber);
+      document.getElementById('copyExpiry').textContent = `${month}/${year}`;
+      document.getElementById('copyCvv').textContent = cvv;
+
+      // Salva para cópia
+      window.currentCard = { number: cardNumber, expiry: `${month}/${year}`, cvv };
+    }
+
+    function copyToClipboard(field) {
+      if (!window.currentCard) return;
+      
+      let text = '';
+      if (field === 'number') text = window.currentCard.number;
+      if (field === 'expiry') text = window.currentCard.expiry;
+      if (field === 'cvv') text = window.currentCard.cvv;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-2xl';
+        toast.textContent = 'Copiado!';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      });
+    }
+
+    function flipCard() {
+      const card = document.getElementById('card');
+      isFlipped = !isFlipped;
+      if (isFlipped) {
+        card.style.transform = 'rotateY(180deg)';
+      } else {
+        card.style.transform = 'rotateY(0deg)';
+      }
+    }
+
+    // Gerar um cartão inicial
+    window.onload = () => {
+      document.getElementById('nameInput').addEventListener('input', () => {
+        if (window.currentCard) generateCard('visa');
+      });
+      generateCard('visa');
+    };
+  </script>
+</body>
+</html>
