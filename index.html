@@ -1,237 +1,61 @@
 <!DOCTYPE html>
-<html lang="pt" class="dark">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EasyCard - Cartões Virtuais</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
-  
-  <style>
-    .card-simple { background: linear-gradient(135deg, #1e40af, #3b82f6); }
-    .card-black { background: linear-gradient(135deg, #111827, #1f2937); box-shadow: 0 0 30px rgba(234, 179, 8, 0.3); }
-    .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyCard - Sua Carteira Digital</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen">
+<body>
 
-  <!-- Navbar -->
-  <nav class="border-b border-gray-800 bg-gray-950 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 bg-emerald-500 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">E</div>
-        <h1 class="text-3xl font-bold tracking-tight text-white">EasyCard</h1>
-      </div>
-      <div class="flex items-center gap-6">
-        <button onclick="toggleTheme()" class="text-2xl hover:text-emerald-400 transition">
-          <i class="fa-solid fa-moon" id="theme-icon"></i>
-        </button>
-        <button onclick="showScreen('login')" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-semibold">
-          Entrar
-        </button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Main Content -->
-  <div id="screens">
-
-    <!-- LANDING PAGE -->
-    <div id="screen-landing" class="screen">
-      <div class="max-w-7xl mx-auto px-6 py-20">
-        <div class="text-center max-w-3xl mx-auto">
-          <h2 class="text-6xl font-bold leading-tight">Cartões virtuais rápidos,<br>seguros e confiáveis</h2>
-          <p class="mt-6 text-xl text-gray-400">Faça pagamentos online em qualquer lugar do mundo com EasyCard.</p>
-          <div class="mt-10 flex justify-center gap-4">
-            <button onclick="showScreen('register')" class="px-10 py-4 bg-emerald-500 hover:bg-emerald-600 text-lg font-semibold rounded-3xl">
-              Criar Conta Grátis
-            </button>
-          </div>
-        </div>
-
-        <div class="mt-20 grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div class="glass p-8 rounded-3xl border border-gray-700">
-            <i class="fa-solid fa-shield-halved text-4xl text-emerald-400"></i>
-            <h4 class="mt-6 text-xl font-semibold">Segurança Máxima</h4>
-            <p class="text-gray-400 mt-3">Seus dados são protegidos com criptografia avançada.</p>
-          </div>
-          <div class="glass p-8 rounded-3xl border border-gray-700">
-            <i class="fa-solid fa-bolt text-4xl text-emerald-400"></i>
-            <h4 class="mt-6 text-xl font-semibold">Instantâneo</h4>
-            <p class="text-gray-400 mt-3">Crie seu cartão em menos de 30 segundos.</p>
-          </div>
-          <div class="glass p-8 rounded-3xl border border-gray-700">
-            <i class="fa-solid fa-globe text-4xl text-emerald-400"></i>
-            <h4 class="mt-6 text-xl font-semibold">Pagamentos Globais</h4>
-            <p class="text-gray-400 mt-3">Aceito em milhões de sites no mundo.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- LOGIN / REGISTER -->
-    <div id="screen-register" class="screen hidden max-w-md mx-auto mt-20 p-8 glass rounded-3xl border border-gray-700">
-      <h3 class="text-3xl font-bold text-center">Criar Conta</h3>
-      <input id="reg-name" type="text" placeholder="Nome completo" class="w-full mt-6 bg-gray-900 border border-gray-700 rounded-2xl px-5 py-4"/>
-      <input id="reg-phone" type="tel" placeholder="Número de telefone" class="w-full mt-4 bg-gray-900 border border-gray-700 rounded-2xl px-5 py-4"/>
-      <button onclick="registerUser()" class="w-full mt-8 py-4 bg-emerald-500 hover:bg-emerald-600 rounded-2xl font-bold">
-        Criar Conta
-      </button>
-      <p class="text-center mt-6 text-sm text-gray-400">Já tens conta? <span onclick="showScreen('login')" class="text-emerald-400 cursor-pointer">Entrar</span></p>
-    </div>
-
-    <!-- DASHBOARD -->
-    <div id="screen-dashboard" class="screen hidden max-w-7xl mx-auto p-6">
-      <div class="flex justify-between items-center">
-        <h2 class="text-4xl font-bold">Bem-vindo, <span id="user-name" class="text-emerald-400"></span></h2>
-        <div class="flex gap-3">
-          <button onclick="showScreen('wallet')" class="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-2xl">Carteira</button>
-          <button onclick="showScreen('cards-shop')" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-2xl">Comprar Cartão</button>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-        <div class="glass p-8 rounded-3xl">
-          <p class="text-gray-400">Saldo Disponível</p>
-          <p id="balance" class="text-5xl font-bold text-emerald-400 mt-3">2.450 MT</p>
-        </div>
-        <div onclick="showScreen('my-cards')" class="glass p-8 rounded-3xl cursor-pointer hover:border-emerald-500 border border-transparent">
-          <p class="text-gray-400">Meus Cartões</p>
-          <p class="text-4xl font-bold mt-3" id="card-count">0</p>
-        </div>
-        <div class="glass p-8 rounded-3xl">
-          <p class="text-gray-400">Bónus Disponível</p>
-          <p id="bonus" class="text-4xl font-bold text-amber-400 mt-3">0 MT</p>
-        </div>
-      </div>
-
-      <button onclick="makeDemoPayment()" class="mt-10 w-full py-6 bg-gradient-to-r from-emerald-500 to-cyan-500 text-xl font-bold rounded-3xl">
-        Fazer Pagamento Online →
-      </button>
-    </div>
-
-    <!-- CARDS SHOP -->
-    <div id="screen-cards-shop" class="screen hidden max-w-5xl mx-auto p-6">
-      <h3 class="text-3xl font-bold mb-8">Escolha seu Cartão</h3>
-      <div class="grid md:grid-cols-2 gap-8">
-        <!-- Cartão Simples -->
-        <div class="glass border border-gray-700 rounded-3xl p-8 hover:border-emerald-500 transition">
-          <div class="card-simple h-64 rounded-3xl p-8 text-white relative">
-            <h4 class="text-2xl font-bold">SIMPLE</h4>
-            <p class="mt-20 text-3xl font-mono">•••• •••• •••• 4242</p>
-            <p class="absolute bottom-8 left-8">Limite: 50.000 MT</p>
-          </div>
-          <div class="mt-6 flex justify-between items-center">
-            <div>
-              <p class="font-bold text-2xl">250 MT</p>
-              <p class="text-sm text-gray-400">Taxa única</p>
+    <div class="app-container">
+        <!-- O Cartão Virtual EasyCard -->
+        <div class="card theme-dark" id="virtual-card">
+            <div class="card-top">
+                <h1 class="app-name">EasyCard</h1>
+                <img src="img/chip.png" alt="Chip" class="chip">
             </div>
-            <button onclick="buyCard('simple')" class="px-10 py-4 bg-emerald-600 rounded-2xl font-semibold">Adquirir</button>
-          </div>
-        </div>
-
-        <!-- Cartão Black Premium -->
-        <div class="glass border border-amber-500 rounded-3xl p-8 hover:border-amber-400 transition">
-          <div class="card-black h-64 rounded-3xl p-8 text-white relative">
-            <h4 class="text-2xl font-bold flex items-center gap-2"><i class="fa-solid fa-crown text-amber-400"></i> BLACK</h4>
-            <p class="mt-20 text-3xl font-mono">•••• •••• •••• 8888</p>
-            <p class="absolute bottom-8 left-8">Limite: 500.000 MT</p>
-          </div>
-          <div class="mt-6 flex justify-between items-center">
-            <div>
-              <p class="font-bold text-2xl">500 MT</p>
-              <p class="text-sm text-gray-400">Taxa única</p>
+            <div class="card-balance">
+                <span class="balance-label">Saldo Disponível</span>
+                <p class="balance-amount" id="balance-amount">0,00 MZN</p>
             </div>
-            <button onclick="buyCard('black')" class="px-10 py-4 bg-amber-500 text-black rounded-2xl font-semibold">Adquirir Premium</button>
-          </div>
+            <div class="card-bottom">
+                <div class="card-holder">
+                    <span class="label">Titular</span>
+                    <p id="card-holder-name">NOME DO USUÁRIO</p>
+                </div>
+                <div class="card-tier">
+                    <span class="label">Plano</span>
+                    <p id="card-tier-name">PREMIUM BLACK</p>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!-- Painel de Controle -->
+        <div class="controls">
+            <h2>Painel de Controle</h2>
+            
+            <div class="control-group">
+                <label for="deposit-amount">Depositar (via M-Pesa/e-Mola)</label>
+                <input type="number" id="deposit-amount" placeholder="Ex: 1600">
+                <button id="deposit-btn">Depositar</button>
+                <p id="bonus-message" class="bonus-message"></p>
+            </div>
+
+            <div class="control-group">
+                <label>Escolha um Tema para seu Cartão</label>
+                <div class="theme-selector">
+                    <button class="theme-btn theme-dark active" data-theme="theme-dark"></button>
+                    <button class="theme-btn theme-ocean" data-theme="theme-ocean"></button>
+                    <button class="theme-btn theme-sunrise" data-theme="theme-sunrise"></button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- WALLET / DEPOSIT -->
-    <div id="screen-wallet" class="screen hidden max-w-2xl mx-auto p-8">
-      <h3 class="text-3xl font-bold mb-8">Recarregar Carteira</h3>
-      <div class="glass p-8 rounded-3xl">
-        <input id="deposit-amount" type="number" placeholder="Valor a depositar (MT)" class="w-full bg-gray-900 border border-gray-700 rounded-2xl px-6 py-5 text-2xl"/>
-        <div class="mt-6 grid grid-cols-2 gap-4">
-          <button onclick="simulateDeposit('emola')" class="py-6 bg-blue-600 rounded-2xl font-semibold">Pagar com eMola</button>
-          <button onclick="simulateDeposit('mpesa')" class="py-6 bg-green-600 rounded-2xl font-semibold">Pagar com M-Pesa</button>
-        </div>
-      </div>
-      <p class="text-center text-sm text-gray-500 mt-6">Depósito acima de 1.600 MT ganha +500 MT de bónus</p>
-    </div>
-
-  </div>
-
-  <script>
-    let currentUser = null;
-    let balance = 2450;
-    let bonus = 0;
-    let cardsOwned = [];
-
-    function showScreen(screen) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-      document.getElementById(`screen-${screen}`).classList.remove('hidden');
-    }
-
-    function toggleTheme() {
-      document.documentElement.classList.toggle('dark');
-      const icon = document.getElementById('theme-icon');
-      icon.classList.toggle('fa-moon');
-      icon.classList.toggle('fa-sun');
-    }
-
-    function registerUser() {
-      const name = document.getElementById('reg-name').value || "Utilizador";
-      currentUser = { name };
-      document.getElementById('user-name').textContent = name.split(' ')[0];
-      showScreen('dashboard');
-    }
-
-    function buyCard(type) {
-      const price = type === 'simple' ? 250 : 500;
-      if (balance < price) {
-        alert("Saldo insuficiente! Recarregue a sua carteira.");
-        showScreen('wallet');
-        return;
-      }
-      balance -= price;
-      cardsOwned.push(type);
-      document.getElementById('balance').textContent = balance + " MT";
-      document.getElementById('card-count').textContent = cardsOwned.length;
-      alert(`Parabéns! Seu cartão ${type === 'black' ? 'Black Premium' : 'Simples'} foi criado com sucesso!`);
-      showScreen('dashboard');
-    }
-
-    function simulateDeposit(method) {
-      const amount = parseInt(document.getElementById('deposit-amount').value);
-      if (!amount) return alert("Digite um valor");
-
-      balance += amount;
-      document.getElementById('balance').textContent = balance + " MT";
-
-      if (amount >= 1600) {
-        bonus += 500;
-        document.getElementById('bonus').textContent = bonus + " MT";
-        alert(`🎉 Depósito de ${amount} MT realizado via ${method.toUpperCase()}!\n\nBónus de 500 MT adicionado!`);
-      } else {
-        alert(`Depósito de ${amount} MT realizado via ${method.toUpperCase()}!`);
-      }
-    }
-
-    function makeDemoPayment() {
-      if (cardsOwned.length === 0) {
-        alert("Você ainda não tem nenhum cartão. Compre um primeiro.");
-        showScreen('cards-shop');
-        return;
-      }
-      alert("🔗 Redirecionando para simulação de pagamento online...\n\n(Em produção isto abriria o checkout com o cartão virtual)");
-    }
-
-    // Inicialização
-    window.onload = () => {
-      showScreen('landing');
-    };
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
