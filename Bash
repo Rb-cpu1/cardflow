@@ -1,0 +1,6 @@
+npm create vite@latest easycard -- --template react
+cd easycard
+npm install
+npm install react-router-dom lucide-react sonner framer-motion
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
